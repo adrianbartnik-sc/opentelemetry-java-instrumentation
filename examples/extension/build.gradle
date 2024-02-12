@@ -43,6 +43,11 @@ repositories {
     name = "sonatype"
     url = uri("https://oss.sonatype.org/content/repositories/snapshots")
   }
+
+  maven {
+    name = "sc-repo"
+    url = uri("https://maven.dev.s-cloud.net/content/groups/soundcloud-proxy/")
+  }
 }
 
 configurations {
@@ -97,6 +102,8 @@ dependencies {
   and added to the resulting jar for our extension's distribution.
    */
   implementation 'org.apache.commons:commons-lang3:3.14.0'
+
+  implementation 'com.soundcloud:jvmkit-http-server_2.13:16.9.0'
 
   //All dependencies below are only for tests
   testImplementation("org.testcontainers:testcontainers:1.19.4")

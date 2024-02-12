@@ -23,7 +23,6 @@ import java.util.Map;
  * <p>Also see https://github.com/open-telemetry/opentelemetry-java/issues/2022
  *
  * @see AutoConfigurationCustomizerProvider
- * @see DemoPropagatorProvider
  */
 @AutoService(AutoConfigurationCustomizerProvider.class)
 public class DemoAutoConfigurationCustomizerProvider
@@ -32,25 +31,11 @@ public class DemoAutoConfigurationCustomizerProvider
   @Override
   public void customize(AutoConfigurationCustomizer autoConfiguration) {
     autoConfiguration
-        .addTracerProviderCustomizer(this::configureSdkTracerProvider)
         .addPropertiesSupplier(this::getDefaultProperties);
-  }
-
-  private SdkTracerProviderBuilder configureSdkTracerProvider(
-      SdkTracerProviderBuilder tracerProvider, ConfigProperties config) {
-
-    return tracerProvider
-        .setIdGenerator(new DemoIdGenerator())
-        .setSpanLimits(SpanLimits.builder().setMaxNumberOfAttributes(1024).build())
-        .addSpanProcessor(new DemoSpanProcessor())
-        .addSpanProcessor(SimpleSpanProcessor.create(new DemoSpanExporter()));
   }
 
   private Map<String, String> getDefaultProperties() {
     Map<String, String> properties = new HashMap<>();
-    properties.put("otel.exporter.otlp.endpoint", "http://backend:8080");
-    properties.put("otel.exporter.otlp.insecure", "true");
-    properties.put("otel.config.max.attrs", "16");
     properties.put("otel.traces.sampler", "demo");
     return properties;
   }

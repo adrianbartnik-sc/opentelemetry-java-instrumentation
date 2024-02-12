@@ -5,8 +5,6 @@
 
 package com.example.javaagent.instrumentation;
 
-import static java.util.Collections.singletonList;
-
 import com.google.auto.service.AutoService;
 import io.opentelemetry.javaagent.extension.instrumentation.InstrumentationModule;
 import io.opentelemetry.javaagent.extension.instrumentation.TypeInstrumentation;
@@ -19,9 +17,9 @@ import net.bytebuddy.matcher.ElementMatcher;
  * response.
  */
 @AutoService(InstrumentationModule.class)
-public final class DemoServlet3InstrumentationModule extends InstrumentationModule {
-  public DemoServlet3InstrumentationModule() {
-    super("servlet-demo", "servlet-3");
+public final class SoundcloudInstrumentationModule extends InstrumentationModule {
+  public SoundcloudInstrumentationModule() {
+    super("soundcloud-otel", "finagle-instrumentation");
   }
 
   /*
@@ -36,11 +34,14 @@ public final class DemoServlet3InstrumentationModule extends InstrumentationModu
 
   @Override
   public ElementMatcher.Junction<ClassLoader> classLoaderMatcher() {
-    return AgentElementMatchers.hasClassesNamed("javax.servlet.http.HttpServlet");
+    return AgentElementMatchers.hasClassesNamed("com.soundcloud.fortune.server.FortuneServiceImpl");
   }
 
   @Override
   public List<TypeInstrumentation> typeInstrumentations() {
-    return singletonList(new DemoServlet3Instrumentation());
+    List<TypeInstrumentation> typeInstrumentations = new java.util.ArrayList<>();
+    typeInstrumentations.add(new FinagleInstrumentation());
+    typeInstrumentations.add(new TwinagleInstrumentation());
+    return typeInstrumentations;
   }
 }
